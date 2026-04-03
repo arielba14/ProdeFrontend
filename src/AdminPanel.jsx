@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import AdminResults from "./AdminResults";  
 import "./AdminPanel.css";
+import "./AppHeader.css";
 import AdminSettings from "./AdminSettings";
 import { apiGet, apiPut, apiDelete } from "./api"; 
 
@@ -64,7 +65,7 @@ function AdminPanel({ onLogout }) {
   return (
     <div className="admin-panel">
       {/* Header fijo con logo y logout */}
-      <header className="admin-header">
+      <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
         <h1>Panel de Control Admin</h1>
         <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>

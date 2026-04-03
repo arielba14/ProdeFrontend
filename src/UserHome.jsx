@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./UserHome.css";
+import "./AppHeader.css";
 import { apiGet } from "./api";
 import { getFlag } from "./flags";
 
@@ -77,9 +78,9 @@ function UserHome({ token, onLogout }) {
   return (
     <div className="userhome-container">
       {/* 🔹 Header intacto */}
-      <header className="userhome-header">
+      <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
-        <h1>Prode Mundial Molinos Florencia</h1>
+        <h1>Panel de Control Admin</h1>
         <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>
       </header>
 

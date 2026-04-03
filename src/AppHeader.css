@@ -1,0 +1,65 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 2px solid #007bff;
+  z-index: 1000;
+}
+
+.app-header .logo {
+  height: 50px;
+  object-fit: contain;
+}
+
+.app-header h1 {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #007bff;
+  margin: 0;
+}
+
+.app-header .logout-btn {
+  background: #6812f3;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.app-header .logout-btn:hover {
+  background: #30116b;
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: row;       /* 🔑 mantiene todo en una sola línea */
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;          /* menos padding */
+    height: 50px;              /* más bajo en móvil */
+  }
+
+  .app-header .logo {
+    height: 28px;              /* logo más chico */
+  }
+
+  .app-header h1 {
+    font-size: 1rem;           /* título más compacto */
+    margin: 0;
+  }
+
+  .app-header .logout-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+}
