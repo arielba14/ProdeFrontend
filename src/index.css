@@ -1,0 +1,33 @@
+/* Variables globales opcionales */
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Aseguramos que todo ocupe la pantalla completa */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Centramos el contenido principal */
+body {
+  display: flex;
+  justify-content: center;   /* centra horizontal */
+  align-items: center;       /* centra vertical */
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: var(--sans);
+}
+
+/* El root actúa como contenedor flexible */
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

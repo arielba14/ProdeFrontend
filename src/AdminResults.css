@@ -1,0 +1,134 @@
+/* Contenedor principal */
+.section {
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Título principal */
+.section h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #007bff;
+}
+
+/* Bloque de cada grupo */
+.group-card {
+  background: #f9f9f9;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.group-card h4 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #007bff;
+  font-size: 1.2rem;
+}
+
+/* Tarjeta de cada partido */
+.match-card {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  max-width: 510px;       /* 👈 ancho máximo más angosto */
+  margin-left: auto;      /* 👈 centrado */
+  margin-right: auto;     /* 👈 centrado */
+}
+
+/* Grid: cada partido en una sola línea */
+.match-grid {
+  display: grid;
+  grid-template-columns: auto 55px auto 55px max-content;
+  align-items: center;
+  justify-content: start;
+  column-gap: 12px;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flag {
+  width: 28px;
+  height: 18px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.team-name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Inputs */
+.score-input {
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  height: 34px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Botón Guardar compacto */
+.save-btn {
+  height: 34px;
+  width: auto;
+  padding: 0 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+  justify-self: end;
+}
+.save-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .match-card {
+    max-width: 100%; /* 👈 en pantallas chicas ocupa todo */
+  }
+
+  .match-grid {
+    grid-template-columns: 1fr 50px 1fr 50px;
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+  }
+
+  .save-btn {
+    grid-column: span 4;
+    margin-top: 8px;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .match-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+  }
+
+  .save-btn {
+    grid-column: span 2;
+    justify-self: stretch;
+  }
+}
