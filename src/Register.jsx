@@ -1,39 +1,36 @@
 import { useState } from "react";
-import { register } from "./api"; // 👈 importamos la función centralizada
+import { register } from "./api";
 
 function Register({ onRegister }) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
   const [message, setMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await register({ nombre, apellido, email, password, whatsapp });
+      const data = await register({ nombre, apellido, email, password });
 
       if (data.error) {
-        // Mostramos el error real que devuelve el backend
         setMessage({ type: "error", text: data.error || "Error en registro" });
         return;
       }
 
-      // Registro exitoso pero pendiente de aprobación
       setMessage({
         type: "info",
         text: "✅ Registro exitoso. Tu cuenta está pendiente de aprobación por el administrador.",
       });
-      onRegister();
+      onRegister(); // vuelve al login
     } catch (err) {
       setMessage({ type: "error", text: "Registro fallido: " + err.message });
     }
   };
 
   return (
-    <>
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div className="login-form">
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Nombre"
@@ -62,18 +59,16 @@ function Register({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <input
-          type="tel"
-          placeholder="WhatsApp (solo números)"
-          value={whatsapp}
-          onChange={(e) => {
-            const onlyNumbers = e.target.value.replace(/\D/g, "");
-            setWhatsapp(onlyNumbers);
-          }}
-          required
-        />
+
         <button className="btn secondary" type="submit">
           Registrarse
+        </button>
+        <button
+          className="btn primary"
+          type="button"
+          onClick={onRegister}
+        >
+          Ya estoy registrado
         </button>
       </form>
 
@@ -82,7 +77,7 @@ function Register({ onRegister }) {
           {message.text}
         </div>
       )}
-    </>
+    </div>
   );
 }
 

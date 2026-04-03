@@ -34,32 +34,39 @@ h1 {
   border-radius: 8px;
   border: none;
   outline: none;
+  box-sizing: border-box;
+  font-size: 1rem;
 }
 
 /* Botones */
 .btn {
   width: 100%;
+  max-width: 320px;     /* límite para que no se estiren demasiado */
   padding: 0.8rem;
   margin-top: 0.8rem;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;   /* centrado */
 }
 
 .btn.primary {
-  background-color: #007bff;
+  background-color: #007bff; /* azul */
   color: white;
 }
 
 .btn.secondary {
-  background-color: #28a745;
+  background-color: #28a745; /* verde */
   color: white;
 }
 
 .btn.logout {
-  background-color: #dc3545;
+  background-color: #dc3545; /* rojo */
   color: white;
 }
 
@@ -83,6 +90,7 @@ h1 {
   }
 }
 
+/* Mensajes */
 .message {
   margin-top: 1rem;
   padding: 1rem;

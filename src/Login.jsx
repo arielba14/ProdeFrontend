@@ -1,6 +1,7 @@
 import { useState } from "react";
+import "./Login.css";
 
-function Login({ onLogin }) {
+function Login({ onLogin, onSwitchRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
@@ -21,12 +22,10 @@ function Login({ onLogin }) {
         return;
       }
 
-      // Guardamos token, rol y predictionsConfirmed en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("predictionsConfirmed", Number(data.predictionsConfirmed));
 
-      // Pasamos todo al App.jsx
       onLogin({
         token: data.token,
         role: data.role,
@@ -40,8 +39,8 @@ function Login({ onLogin }) {
   };
 
   return (
-    <>
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div className="login-form">
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
           placeholder="Correo electrónico"
@@ -59,6 +58,13 @@ function Login({ onLogin }) {
         <button className="btn primary" type="submit">
           Iniciar Sesión
         </button>
+        <button
+          className="btn secondary"
+          type="button"
+          onClick={onSwitchRegister}
+        >
+          Registrarse
+        </button>
       </form>
 
       {message && (
@@ -66,7 +72,7 @@ function Login({ onLogin }) {
           {message.text}
         </div>
       )}
-    </>
+    </div>
   );
 }
 

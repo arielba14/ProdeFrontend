@@ -66,19 +66,12 @@ function App() {
           <h1>PRODE MUNDIAL MOLINOS FLORENCIA</h1>
         </header>
 
-        <div className="buttons">
-          {showRegister ? (
-            <Register onRegister={() => setShowRegister(false)} />
-          ) : (
-            <Login onLogin={handleLogin} />
-          )}
-          <button
-            className="btn secondary"
-            onClick={() => setShowRegister(!showRegister)}
-          >
-            {showRegister ? "Ya tengo cuenta" : "Registrarse"}
-          </button>
-        </div>
+        {/* Alternamos entre Login y Register */}
+        {showRegister ? (
+          <Register onRegister={() => setShowRegister(false)} />
+        ) : (
+          <Login onLogin={handleLogin} onSwitchRegister={() => setShowRegister(true)} />
+        )}
       </div>
     );
   }
