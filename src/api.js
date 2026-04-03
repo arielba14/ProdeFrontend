@@ -5,12 +5,12 @@ const API_URL = import.meta.env.VITE_API_URL;
 const handleResponse = async (response) => {
   const contentType = response.headers.get("content-type");
   if (!contentType || !contentType.includes("application/json")) {
-    throw new Error("Respuesta inesperada del servidor");
+    return { error: "Respuesta inesperada del servidor" };
   }
 
-  const json = await response.json();   // leer una sola vez
+  const json = await response.json();
   if (!response.ok) {
-    throw new Error(json.error || "Error en la petición");
+    return { error: json.error || "Error en la petición" };
   }
 
   return json;

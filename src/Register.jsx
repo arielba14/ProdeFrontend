@@ -6,10 +6,18 @@ function Register({ onRegister }) {
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 👇 Validamos que las contraseñas coincidan
+    if (password !== confirmPassword) {
+      setMessage({ type: "error", text: "Las contraseñas no coinciden" });
+      return;
+    }
+
     try {
       const data = await register({ nombre, apellido, email, password });
 
@@ -57,6 +65,13 @@ function Register({ onRegister }) {
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Confirmar contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
 
