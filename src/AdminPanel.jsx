@@ -6,9 +6,10 @@ import AdminSettings from "./AdminSettings";
 import { apiGet, apiPut, apiDelete } from "./api"; 
 
 function AdminPanel({ onLogout }) {
-  const [view, setView] = useState("pending"); // "pending", "all" o "settings"
+  const [view, setView] = useState("pending"); // "pending", "all", "unconfirmed", "settings", "results"
   const [pendingUsers, setPendingUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [unconfirmedUsers, setUnconfirmedUsers] = useState([]);
   const token = localStorage.getItem("token");
 
   // Cargar usuarios según la vista seleccionada
@@ -21,6 +22,10 @@ function AdminPanel({ onLogout }) {
       apiGet("/users", token)
         .then((data) => setAllUsers(data))
         .catch((err) => console.error("Error al cargar usuarios:", err));
+    } else if (view === "unconfirmed") {
+      apiGet("/users/unconfirmed", token)
+        .then((data) => setUnconfirmedUsers(data))
+        .catch((err) => console.error("Error al cargar no confirmados:", err));
     }
   }, [view, token]);
 
@@ -80,16 +85,15 @@ function AdminPanel({ onLogout }) {
           <button className={view === "all" ? "active" : ""} onClick={() => setView("all")}>
             Todos los usuarios
           </button>
+          <button className={view === "unconfirmed" ? "active" : ""} onClick={() => setView("unconfirmed")}>
+            No confirmaron
+          </button>
           <button className={view === "settings" ? "active" : ""} onClick={() => setView("settings")}>
             Configuración
           </button>
-          <button
-            className={view === "results" ? "active" : ""}
-            onClick={() => setView("results")}
-          >
+          <button className={view === "results" ? "active" : ""} onClick={() => setView("results")}>
             Resultados
           </button>
-
         </div>
 
         {view === "pending" && (
@@ -140,10 +144,27 @@ function AdminPanel({ onLogout }) {
           </div>
         )}
 
+       {view === "unconfirmed" && (
+        <div className="section">
+          <h3>Usuarios que no confirmaron sus pronósticos</h3>
+          {unconfirmedUsers.length === 0 ? (
+            <p>Todos los usuarios ya confirmaron ✅</p>
+          ) : (
+            unconfirmedUsers.map((user) => (
+              <div key={user.id} className="user-card">
+                <div className="user-info">
+                  <p><strong>{user.nombre} {user.apellido}</strong> - {user.email}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
         {view === "settings" && (
           <div className="settings-section">
             <h3>Configuración de Pronósticos</h3>
-            <AdminSettings token={token} />   {/* 👈 acá pasamos el token */}
+            <AdminSettings token={token} />
           </div>
         )}
 
@@ -152,7 +173,6 @@ function AdminPanel({ onLogout }) {
             <AdminResults token={token} />
           </div>
         )}
-
       </div>
     </div>
   );
