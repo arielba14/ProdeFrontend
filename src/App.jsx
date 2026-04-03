@@ -7,7 +7,6 @@ import UserHome from "./UserHome";
 import Predictions from "./Predictions";
 
 function App() {
-  // 👉 Normalizamos token y predictionsConfirmed al iniciar
   const initialToken = localStorage.getItem("token");
   const [token, setToken] = useState(
     initialToken && initialToken !== "undefined" ? initialToken : null
@@ -22,13 +21,12 @@ function App() {
   const [predictionsConfirmed, setPredictionsConfirmed] = useState(
     initialPredictions && initialPredictions !== "undefined"
       ? parseInt(initialPredictions, 10)
-      : 0 // 👈 default en 0 si no existe
+      : 0
   );
 
   const [showRegister, setShowRegister] = useState(false);
 
   const handleLogin = (data) => {
-    // Guardamos solo si existen valores válidos
     if (data.token) {
       localStorage.setItem("token", data.token);
       setToken(data.token);
@@ -42,7 +40,6 @@ function App() {
       localStorage.setItem("predictionsConfirmed", confirmedValue);
       setPredictionsConfirmed(confirmedValue);
     } else {
-      // 👇 si no viene nada, lo tratamos como no confirmado
       localStorage.setItem("predictionsConfirmed", 0);
       setPredictionsConfirmed(0);
     }
@@ -54,10 +51,9 @@ function App() {
     localStorage.removeItem("predictionsConfirmed");
     setToken(null);
     setRole(null);
-    setPredictionsConfirmed(0); // 👈 al salir, default en 0
+    setPredictionsConfirmed(0);
   };
 
-  // Renderizado principal
   if (!token) {
     return (
       <div className="container">
@@ -66,7 +62,6 @@ function App() {
           <h1>PRODE MUNDIAL MOLINOS FLORENCIA</h1>
         </header>
 
-        {/* Alternamos entre Login y Register */}
         {showRegister ? (
           <Register onRegister={() => setShowRegister(false)} />
         ) : (
@@ -82,11 +77,13 @@ function App() {
 
   if (role === "user" && predictionsConfirmed === 0) {
     return (
-      <Predictions
-        token={token}
-        onLogout={handleLogout}
-        onConfirmPredictions={() => setPredictionsConfirmed(1)} // 👈 actualiza estado al confirmar
-      />
+      <div className="predictions-wrapper">
+        <Predictions
+          token={token}
+          onLogout={handleLogout}
+          onConfirmPredictions={() => setPredictionsConfirmed(1)}
+        />
+      </div>
     );
   }
 

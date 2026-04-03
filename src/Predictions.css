@@ -228,6 +228,11 @@
     text-align: center;
   }
 
+  .predictions-container {
+    margin-top: 180px; /* más espacio en móviles */
+  }
+
+
   .local-block,
   .visitor-block {
     justify-content: center;
@@ -237,6 +242,21 @@
     margin: 0.5rem 0;
     grid-column: auto;
   }
+  .predictions-header h1 {
+    font-size: 1.1rem;   /* más chico */
+    max-width: 60%;      /* no se estira de lado a lado */
+    text-align: center;
+  }
+
+  .predictions-header .logo {
+    height: 32px;        /* logo más compacto */
+  }
+
+  .logout-btn {
+    padding: 6px 12px;   /* botón más chico */
+    font-size: 0.9rem;
+  }
+
 }
 
 @media (max-width: 480px) {
