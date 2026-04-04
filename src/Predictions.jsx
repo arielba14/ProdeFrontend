@@ -145,10 +145,22 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
             const team1Incomplete = predictions[match.id]?.team1 == null;
             const team2Incomplete = predictions[match.id]?.team2 == null;
 
+            // 👉 Nuevo: puntos obtenidos
+            const points = predictions[match.id]?.puntos; // 0, 1, 2 o 3
+            let pointsClass = "";
+            if (points === 3) pointsClass = "points-3";
+            else if (points === 1) pointsClass = "points-1";
+            else if (points === 0) pointsClass = "points-0";
+
             return (
-              <div key={match.id} className="match-card">
+              <div
+                key={match.id}
+                className={`match-card ${team1Incomplete || team2Incomplete ? "incomplete-card" : ""} ${pointsClass}`}
+              >
                 <div className="local-block">
-                  {getFlag(match.local) && <img src={getFlag(match.local)} alt={normalizeName(match.local)} />}
+                  {getFlag(match.local) && (
+                    <img src={getFlag(match.local)} alt={normalizeName(match.local)} />
+                  )}
                   <span>{normalizeName(match.local)}</span>
                   <input
                     className={`score ${team1Incomplete ? "incomplete" : ""}`}
@@ -171,9 +183,16 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
                     onChange={(e) => handlePrediction(match.id, "team2", e.target.value)}
                     disabled={confirmed}
                   />
-                  {getFlag(match.visita) && <img src={getFlag(match.visita)} alt={normalizeName(match.visita)} />}
+                  {getFlag(match.visita) && (
+                    <img src={getFlag(match.visita)} alt={normalizeName(match.visita)} />
+                  )}
                   <span>{normalizeName(match.visita)}</span>
                 </div>
+
+                {/* 👉 Opcional: mostrar puntos */}
+                {points !== undefined && confirmed && (
+                  <div className="points-label">+{points} pts</div>
+                )}
               </div>
             );
           })}
