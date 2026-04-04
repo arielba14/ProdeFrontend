@@ -25,7 +25,10 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         if (!Array.isArray(data)) throw new Error(data.error || "Respuesta inesperada");
         const predObj = {};
         data.forEach((p) => {
-          predObj[p.match_id] = { team1: p.team1, team2: p.team2 };
+          predObj[p.match_id] = {
+            team1: p.team1 !== null ? Number(p.team1) : null,
+            team2: p.team2 !== null ? Number(p.team2) : null
+          };
           if (p.confirmed) setConfirmed(true);
         });
         setPredictions(predObj);
@@ -42,7 +45,10 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     if (confirmed) return;
     setPredictions({
       ...predictions,
-      [matchId]: { ...predictions[matchId], [team]: value }
+      [matchId]: {
+        ...predictions[matchId],
+        [team]: value === "" ? null : Number(value) // guardamos como número
+      }
     });
   };
 
@@ -63,10 +69,8 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
   const confirmPredictions = async () => {
     const incompletos = matches.some(
       (m) =>
-        predictions[m.id]?.team1 === undefined ||
-        predictions[m.id]?.team1 === "" ||
-        predictions[m.id]?.team2 === undefined ||
-        predictions[m.id]?.team2 === ""
+        predictions[m.id]?.team1 == null ||
+        predictions[m.id]?.team2 == null
     );
 
     if (incompletos) {
@@ -94,10 +98,8 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
   const totalMatches = matches.length;
   const completedMatches = matches.filter(
     (m) =>
-      predictions[m.id]?.team1 !== "" &&
-      predictions[m.id]?.team1 !== undefined &&
-      predictions[m.id]?.team2 !== "" &&
-      predictions[m.id]?.team2 !== undefined
+      predictions[m.id]?.team1 != null &&
+      predictions[m.id]?.team2 != null
   ).length;
   const remainingMatches = totalMatches - completedMatches;
   const progressPercent = totalMatches > 0 ? (completedMatches / totalMatches) * 100 : 0;
@@ -109,7 +111,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     return acc;
   }, {});
 
-  // Normalizar nombres para mostrar siempre Qatar en vez de Katar, etc.
+  // Normalizar nombres
   const normalizeName = (name) => {
     if (name === "katar") return "Qatar";
     return name;
@@ -138,10 +140,10 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         <div key={grupo} className="grupo-block">
           <h2>Grupo {grupo}</h2>
           {partidos.map((match) => {
-            const team1Val = predictions[match.id]?.team1 || "";
-            const team2Val = predictions[match.id]?.team2 || "";
-            const team1Incomplete = team1Val === "";
-            const team2Incomplete = team2Val === "";
+            const team1Val = predictions[match.id]?.team1 ?? "";
+            const team2Val = predictions[match.id]?.team2 ?? "";
+            const team1Incomplete = predictions[match.id]?.team1 == null;
+            const team2Incomplete = predictions[match.id]?.team2 == null;
 
             return (
               <div key={match.id} className="match-card">
