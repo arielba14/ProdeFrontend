@@ -27,7 +27,8 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         data.forEach((p) => {
           predObj[p.match_id] = {
             team1: p.team1 !== null ? Number(p.team1) : null,
-            team2: p.team2 !== null ? Number(p.team2) : null
+            team2: p.team2 !== null ? Number(p.team2) : null,
+            puntos: p.puntos // 👉 guardar los puntos
           };
           if (p.confirmed) setConfirmed(true);
         });
@@ -166,6 +167,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
                     className={`score ${team1Incomplete ? "incomplete" : ""}`}
                     type="number"
                     min="0"
+                    step="1"
                     value={team1Val}
                     onChange={(e) => handlePrediction(match.id, "team1", e.target.value)}
                     disabled={confirmed}
@@ -179,6 +181,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
                     className={`score ${team2Incomplete ? "incomplete" : ""}`}
                     type="number"
                     min="0"
+                    step="1"
                     value={team2Val}
                     onChange={(e) => handlePrediction(match.id, "team2", e.target.value)}
                     disabled={confirmed}
