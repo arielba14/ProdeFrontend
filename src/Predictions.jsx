@@ -114,14 +114,9 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
 
   // Normalizar nombres
   const normalizeName = (name) => {
-    const map = {
-      "Katar": "Qatar",
-      "katar": "Qatar",
-      "Qatar": "Qatar"
-    };
-    return map[name] || name;
+    if ((name === "katar") || (name === "Katar")) return "Qatar";
+    return name;
   };
-
 
   return (
     <div className="predictions-container">
