@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { apiGet, apiPut } from "./api";
 import { getFlag } from "./flags";
 import "./AdminResults.css";
+import { showAlert } from "./alertService";
 
 function AdminResults({ token }) {
   const [matches, setMatches] = useState([]);

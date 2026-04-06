@@ -3,6 +3,7 @@ import "./UserHome.css";
 import "./AppHeader.css";
 import { apiGet } from "./api";
 import { getFlag } from "./flags";
+import { showAlert } from "./alertService";
 
 function UserHome({ token, onLogout }) {
   const [view, setView] = useState("predictions"); 

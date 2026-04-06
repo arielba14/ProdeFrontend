@@ -3,6 +3,7 @@ import "./Predictions.css";
 import "./AppHeader.css";
 import { apiGet, apiPost } from "./api";
 import { getFlag } from "./flags";
+import { showAlert } from "./alertService";
 
 function Predictions({ token, onLogout, onConfirmPredictions }) {
   const [matches, setMatches] = useState([]);

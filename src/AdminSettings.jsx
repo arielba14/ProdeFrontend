@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { apiGet, apiPut } from "./api";
+import { showAlert } from "./alertService";
 
 function AdminSettings({ token }) {
   const [deadline, setDeadline] = useState("");
