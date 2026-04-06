@@ -7,6 +7,24 @@
   margin-top: 100px; /* espacio para el header fijo */
 }
 
+.match-card.points-3 {  
+  background-color: #6eeb8b; /* verde suave */
+}
+
+.match-card.points-1 {
+  background-color: #e2e063; /* amarillo suave */
+}
+
+.col-aciertos3, .col-aciertos1 {
+  text-align: center;
+  width: 120px;
+}
+
+
+.match-card.points-0 {
+  background-color: #f07681; /* rojo suave */
+}
+
 /* Estilo para filas clickeables en la tabla de posiciones */
 .ranking-table tbody tr {
   cursor: pointer;

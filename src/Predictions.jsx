@@ -27,8 +27,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         data.forEach((p) => {
           predObj[p.match_id] = {
             team1: p.team1 !== null ? Number(p.team1) : null,
-            team2: p.team2 !== null ? Number(p.team2) : null,
-            puntos: p.puntos // 👉 guardar los puntos
+            team2: p.team2 !== null ? Number(p.team2) : null
           };
           if (p.confirmed) setConfirmed(true);
         });
@@ -48,7 +47,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
       ...predictions,
       [matchId]: {
         ...predictions[matchId],
-        [team]: value === "" ? null : Number(value) // guardamos como número
+        [team]: value === "" ? null : Number(value)
       }
     });
   };
@@ -126,81 +125,79 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>
       </header>
 
-      {/* Barra de progreso */}
+      {/* Barra de progreso fija */}
       {!confirmed && (
-        <div className="progress-container">
+        <div className="progress-fixed">
           <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
-          <p>{remainingMatches > 0 
+          <p>
+            {remainingMatches > 0 
               ? `Faltan ${remainingMatches} partidos por completar` 
-              : "Todos los partidos están completos ✅"}</p>
+              : "Todos los partidos están completos ✅"}
+          </p>
         </div>
       )}
 
-      {/* Renderizar partidos agrupados */}
-      {Object.entries(groupedMatches).map(([grupo, partidos]) => (
-        <div key={grupo} className="grupo-block">
-          <h2>Grupo {grupo}</h2>
-          {partidos.map((match) => {
-            const team1Val = predictions[match.id]?.team1 ?? "";
-            const team2Val = predictions[match.id]?.team2 ?? "";
-            const team1Incomplete = predictions[match.id]?.team1 == null;
-            const team2Incomplete = predictions[match.id]?.team2 == null;
+      {/* Scroll solo en partidos */}
+      <div className="matches-scroll">
+        {Object.entries(groupedMatches).map(([grupo, partidos]) => (
+          <div key={grupo} className="grupo-block">
+            <h2>Grupo {grupo}</h2>
+            {partidos.map((match) => {
+              const team1Val = predictions[match.id]?.team1 ?? "";
+              const team2Val = predictions[match.id]?.team2 ?? "";
+              const team1Incomplete = predictions[match.id]?.team1 == null;
+              const team2Incomplete = predictions[match.id]?.team2 == null;
 
-            // 👉 Nuevo: puntos obtenidos
-            const points = predictions[match.id]?.puntos; // 0, 1, 2 o 3
-            let pointsClass = "";
-            if (points === 3) pointsClass = "points-3";
-            else if (points === 1) pointsClass = "points-1";
-            else if (points === 0) pointsClass = "points-0";
+              return (
+                <div
+                  key={match.id}
+                  className={`match-card ${team1Incomplete || team2Incomplete ? "incomplete-card" : ""}`}
+                >
+                  <div className="local-block">
+                    {getFlag(match.local) && (
+                      <img src={getFlag(match.local)} alt={normalizeName(match.local)} />
+                    )}
+                    <span>{normalizeName(match.local)}</span>
+                    <input
+                      className={`score ${team1Incomplete ? "incomplete" : ""}`}
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={team1Val}
+                      onChange={(e) => handlePrediction(match.id, "team1", e.target.value)}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[.,]/g, "");
+                      }}
+                      disabled={confirmed}
+                    />
+                  </div>
 
-            return (
-              <div
-                key={match.id}
-                className={`match-card ${team1Incomplete || team2Incomplete ? "incomplete-card" : ""} ${pointsClass}`}
-              >
-                <div className="local-block">
-                  {getFlag(match.local) && (
-                    <img src={getFlag(match.local)} alt={normalizeName(match.local)} />
-                  )}
-                  <span>{normalizeName(match.local)}</span>
-                  <input
-                    className={`score ${team1Incomplete ? "incomplete" : ""}`}
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={team1Val}
-                    onChange={(e) => handlePrediction(match.id, "team1", e.target.value)}
-                    disabled={confirmed}
-                  />
+                  <span className="vs">VS</span>
+
+                  <div className="visitor-block">
+                    <input
+                      className={`score ${team2Incomplete ? "incomplete" : ""}`}
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={team2Val}
+                      onChange={(e) => handlePrediction(match.id, "team2", e.target.value)}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[.,]/g, "");
+                      }}
+                      disabled={confirmed}
+                    />
+                    {getFlag(match.visita) && (
+                      <img src={getFlag(match.visita)} alt={normalizeName(match.visita)} />
+                    )}
+                    <span>{normalizeName(match.visita)}</span>
+                  </div>
                 </div>
-
-                <span className="vs">VS</span>
-
-                <div className="visitor-block">
-                  <input
-                    className={`score ${team2Incomplete ? "incomplete" : ""}`}
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={team2Val}
-                    onChange={(e) => handlePrediction(match.id, "team2", e.target.value)}
-                    disabled={confirmed}
-                  />
-                  {getFlag(match.visita) && (
-                    <img src={getFlag(match.visita)} alt={normalizeName(match.visita)} />
-                  )}
-                  <span>{normalizeName(match.visita)}</span>
-                </div>
-
-                {/* 👉 Opcional: mostrar puntos */}
-                {points !== undefined && confirmed && (
-                  <div className="points-label">+{points} pts</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ))}
+              );
+            })}
+          </div>
+        ))}
+      </div>
 
       <div className="buttons-row">
         {!confirmed && (

@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./UserHome.css";
 import "./AppHeader.css";
 import { apiGet } from "./api";
 import { getFlag } from "./flags";
 
 function UserHome({ token, onLogout }) {
-  const [view, setView] = useState("predictions"); // "predictions", "ranking", "results", "userPredictions"
+  const [view, setView] = useState("predictions"); 
   const [myPredictions, setMyPredictions] = useState([]);
   const [ranking, setRanking] = useState([]);
   const [selectedUserPredictions, setSelectedUserPredictions] = useState(null);
@@ -13,17 +13,9 @@ function UserHome({ token, onLogout }) {
   const [matches, setMatches] = useState([]);
 
   useEffect(() => {
-    apiGet("/predictions", token)
-      .then(setMyPredictions)
-      .catch(err => console.error("Error al cargar mis predicciones:", err));
-
-    apiGet("/ranking", token)
-      .then(setRanking)
-      .catch(err => console.error("Error al cargar ranking:", err));
-
-    apiGet("/matches", token)
-      .then(setMatches)
-      .catch(err => console.error("Error al cargar partidos:", err));
+    apiGet("/predictions", token).then(setMyPredictions).catch(err => console.error("Error al cargar mis predicciones:", err));
+    apiGet("/ranking", token).then(setRanking).catch(err => console.error("Error al cargar ranking:", err));
+    apiGet("/matches", token).then(setMatches).catch(err => console.error("Error al cargar partidos:", err));
   }, [token]);
 
   const viewUserPredictions = async (userId) => {
@@ -41,43 +33,42 @@ function UserHome({ token, onLogout }) {
     }
   };
 
-  // Enriquecer mis predicciones con grupo desde matches
-  const enrichedPredictions = myPredictions.map(p => {
+  const groupBy = (items, keyFn) =>
+    items.reduce((acc, item) => {
+      const key = keyFn(item) || "Sin grupo";
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+
+  // Mis predicciones enriquecidas
+  const enrichedPredictions = useMemo(() =>
+  myPredictions.map(p => {
     const match = matches.find(m => m.id === p.match_id);
-    return { ...p, grupo: match?.grupo };
-  });
+    const hasResult = match?.goles_local !== null && match?.goles_visita !== null;
+    return { ...p, grupo: match?.grupo, puntos: p.puntos, hasResult };
+  }), [myPredictions, matches]);
 
-  const groupedPredictions = enrichedPredictions.reduce((acc, p) => {
-    const grupo = p.grupo || "Sin grupo";
-    if (!acc[grupo]) acc[grupo] = [];
-    acc[grupo].push(p);
-    return acc;
-  }, {});
+  const groupedPredictions = useMemo(() =>
+    groupBy(enrichedPredictions, p => p.grupo), [enrichedPredictions]);
 
-  // Enriquecer predicciones de otro usuario con grupo
-  const enrichedUserPredictions = selectedUserPredictions?.map(p => {
-    const match = matches.find(m => m.id === p.match_id);
-    return { ...p, grupo: match?.grupo };
-  }) || [];
+  // Predicciones de otro usuario
+  const enrichedUserPredictions = useMemo(() =>
+    (selectedUserPredictions?.map(p => {
+      const match = matches.find(m => m.id === p.match_id);
+      const hasResult = match?.goles_local !== null && match?.goles_visita !== null;
+      return { ...p, grupo: match?.grupo, puntos: p.puntos, hasResult };
+    }) || []), [selectedUserPredictions, matches]);
 
-  const groupedUserPredictions = enrichedUserPredictions.reduce((acc, p) => {
-    const grupo = p.grupo || "Sin grupo";
-    if (!acc[grupo]) acc[grupo] = [];
-    acc[grupo].push(p);
-    return acc;
-  }, {});
+  const groupedUserPredictions = useMemo(() =>
+    groupBy(enrichedUserPredictions, p => p.grupo), [enrichedUserPredictions]);
 
-  // Agrupar resultados oficiales por grupo
-  const groupedMatches = matches.reduce((acc, m) => {
-    const grupo = m.grupo || "Sin grupo";
-    if (!acc[grupo]) acc[grupo] = [];
-    acc[grupo].push(m);
-    return acc;
-  }, {});
+  // Resultados oficiales
+  const groupedMatches = useMemo(() =>
+    groupBy(matches, m => m.grupo), [matches]);
 
   return (
     <div className="userhome-container">
-      {/* 🔹 Header intacto */}
       <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
         <h1>Panel de Control Admin</h1>
@@ -85,17 +76,12 @@ function UserHome({ token, onLogout }) {
       </header>
 
       <div className="view-buttons">
-        <button className={view === "predictions" ? "active" : ""} onClick={() => setView("predictions")}>
-          Mis Pronósticos
-        </button>
-        <button className={view === "ranking" ? "active" : ""} onClick={() => setView("ranking")}>
-          Posiciones
-        </button>
-        <button className={view === "results" ? "active" : ""} onClick={() => setView("results")}>
-          Resultados Oficiales
-        </button>
+        <button className={view === "predictions" ? "active" : ""} onClick={() => setView("predictions")}>Mis Pronósticos</button>
+        <button className={view === "ranking" ? "active" : ""} onClick={() => setView("ranking")}>Posiciones</button>
+        <button className={view === "results" ? "active" : ""} onClick={() => setView("results")}>Resultados Oficiales</button>
       </div>
 
+      {/* 🔹 Mis Pronósticos */}
       {view === "predictions" && (
         <div className="section">
           <h3>Mis Pronósticos</h3>
@@ -103,7 +89,16 @@ function UserHome({ token, onLogout }) {
             <div key={grupo} className="group-card">
               <h4>Grupo {grupo}</h4>
               {partidos.map((p) => (
-                <div key={p.match_id} className="match-card">
+                <div 
+                  key={p.match_id} 
+                  className={`match-card ${
+                    p.hasResult ? (
+                      p.puntos === 3 ? "points-3" :
+                      p.puntos === 1 ? "points-1" :
+                      p.puntos === 0 ? "points-0" : ""
+                    ) : ""
+                  }`}
+                >
                   <div className="local-block">
                     {getFlag(p.local) && <img src={getFlag(p.local)} alt={p.local} />}
                     <span>{p.local}</span>
@@ -111,9 +106,9 @@ function UserHome({ token, onLogout }) {
                   </div>
                   <span className="vs">VS</span>
                   <div className="visitor-block">
-                    <span className="score">{p.team2 ?? "-"}</span>
                     {getFlag(p.visita) && <img src={getFlag(p.visita)} alt={p.visita} />}
                     <span>{p.visita}</span>
+                    <span className="score">{p.team2 ?? "-"}</span>
                   </div>
                 </div>
               ))}
@@ -122,6 +117,7 @@ function UserHome({ token, onLogout }) {
         </div>
       )}
 
+      {/* 🔹 Ranking */}
       {view === "ranking" && (
         <div className="section">
           <h3>Tabla de Posiciones</h3>
@@ -131,6 +127,8 @@ function UserHome({ token, onLogout }) {
                 <th className="col-pos">Pos</th>
                 <th className="col-nombre">Nombre</th>
                 <th className="col-puntos">Puntos</th>
+                <th className="col-aciertos3">Aciertos (3 pts)</th>
+                <th className="col-aciertos1">Aciertos (1 pt)</th>
               </tr>
             </thead>
             <tbody>
@@ -143,6 +141,8 @@ function UserHome({ token, onLogout }) {
                   </td>
                   <td className="col-nombre">{user.nombre} {user.apellido}</td>
                   <td className="col-puntos">{user.total_puntos}</td>
+                  <td className="col-aciertos3">{user.aciertos_3 ?? 0}</td>
+                  <td className="col-aciertos1">{user.aciertos_1 ?? 0}</td>
                 </tr>
               ))}
             </tbody>
@@ -150,6 +150,7 @@ function UserHome({ token, onLogout }) {
         </div>
       )}
 
+      {/* 🔹 Pronósticos de otro usuario */}
       {view === "userPredictions" && selectedUserPredictions?.length > 0 && (
         <div className="section">
           <h3>Pronósticos de {selectedUser?.nombre} {selectedUser?.apellido}</h3>
@@ -157,7 +158,16 @@ function UserHome({ token, onLogout }) {
             <div key={grupo} className="group-card">
               <h4>Grupo {grupo}</h4>
               {partidos.map((p) => (
-                <div key={p.match_id} className="match-card">
+                <div 
+                  key={p.match_id} 
+                  className={`match-card ${
+                    p.hasResult ? (
+                      p.puntos === 3 ? "points-3" :
+                      p.puntos === 1 ? "points-1" :
+                      p.puntos === 0 ? "points-0" : ""
+                    ) : ""
+                  }`}
+                >
                   <div className="local-block">
                     {getFlag(p.local) && <img src={getFlag(p.local)} alt={p.local} />}
                     <span>{p.local}</span>
@@ -165,9 +175,9 @@ function UserHome({ token, onLogout }) {
                   </div>
                   <span className="vs">VS</span>
                   <div className="visitor-block">
-                    <span className="score">{p.pred_visita ?? "-"}</span>
                     {getFlag(p.visita) && <img src={getFlag(p.visita)} alt={p.visita} />}
                     <span>{p.visita}</span>
+                    <span className="score">{p.pred_visita ?? "-"}</span>
                   </div>
                 </div>
               ))}
@@ -177,6 +187,7 @@ function UserHome({ token, onLogout }) {
         </div>
       )}
 
+      {/* 🔹 Resultados Oficiales */}
       {view === "results" && (
         <div className="section">
           <h3>Resultados Oficiales</h3>
@@ -192,9 +203,9 @@ function UserHome({ token, onLogout }) {
                   </div>
                   <span className="vs">VS</span>
                   <div className="visitor-block">
-                    <span className="score">{m.goles_visita ?? "-"}</span>
                     {getFlag(m.visita) && <img src={getFlag(m.visita)} alt={m.visita} />}
                     <span>{m.visita}</span>
+                    <span className="score">{m.goles_visita ?? "-"}</span>
                   </div>
                 </div>
               ))}

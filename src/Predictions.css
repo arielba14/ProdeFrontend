@@ -1,43 +1,67 @@
 /* Contenedor principal */
 .predictions-container {
-  margin-top: 120px;
+  margin-top: 80px;   /* altura del header fijo en escritorio */
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   padding: 1rem;
-  max-height: 85vh;
-  overflow-y: auto;
   box-sizing: border-box;
   padding-bottom: 70px;
 }
 
-.points-3 {
-  background: #e6ffed;   /* verde suave */
-  border-color: #28a745;
+/* Scroll solo en partidos */
+.matches-scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-top: 90px;   /* espacio para barra en escritorio */
 }
 
-.points-1 {
-  background: #fffbe6;   /* amarillo suave */
-  border-color: #ffc107;
+/* Barra de progreso fija */
+.progress-fixed {
+  position: sticky;
+  top: 80px;          /* debajo del header fijo en escritorio */
+  background: #fff;
+  padding: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.points-0 {
-  background: #ffe6e6;   /* rojo suave */
-  border-color: #dc3545;
+.progress-fixed .progress-bar {
+  display: block;
+  width: 0; /* se actualiza con style={{width: ...}} */
+  height: 10px;
+  background: #28a745;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+  align-self: stretch; /* ocupa todo el ancho */
 }
 
-.points-label {
+.progress-fixed p {
   margin-top: 0.5rem;
-  font-weight: bold;
+  text-align: center;
+  font-size: 0.9rem;
   color: #333;
 }
 
-.incomplete-card {
-  background: #fff5f5;   /* fondo rojo suave */
-  border-color: #dc3545; /* borde rojo */
+/* En móvil: header más bajo, ajustamos top y padding */
+@media (max-width: 768px) {
+  .progress-fixed {
+    top: 50px;   /* justo debajo del header móvil */
+  }
+
+  .matches-scroll {
+    padding-top: 120px; /* más espacio para que no tape Grupo A */
+  }
 }
 
-/* Bloque de cada grupo */
+/* Resto de estilos */
+.incomplete-card {
+  background: #fff5f5;
+  border-color: #dc3545;
+}
+
 .grupo-block {
   background: #f9f9f9;
   border: 2px solid #007bff;
@@ -54,7 +78,6 @@
   font-size: 1.3rem;
 }
 
-/* Tarjeta de cada partido */
 .match-card {
   display: grid;
   grid-template-columns: 1fr 60px 1fr;
@@ -67,7 +90,6 @@
   margin-bottom: 1rem;
 }
 
-/* Bloque local */
 .local-block {
   display: flex;
   align-items: center;
@@ -89,11 +111,10 @@
 }
 
 .local-block input.score {
-  width: 60px;   /* ancho fijo */
+  width: 60px;
   text-align: center;
 }
 
-/* Bloque visitante */
 .visitor-block {
   display: flex;
   align-items: center;
@@ -115,11 +136,10 @@
 }
 
 .visitor-block input.score {
-  width: 60px;   /* mismo ancho que local */
+  width: 60px;
   text-align: center;
 }
 
-/* Texto VS */
 .vs {
   font-weight: bold;
   color: #333;
@@ -127,7 +147,6 @@
   grid-column: 2;
 }
 
-/* Estilo más elegante para los resultados */
 .score {
   font-weight: 500;
   color: #007bff;
@@ -140,13 +159,11 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Inputs incompletos */
 .score.incomplete {
-  border: 2px solid #dc3545; /* rojo */
+  border: 2px solid #dc3545;
   background: #fff5f5;
 }
 
-/* Botones en fila */
 .buttons-row {
   display: flex;
   justify-content: center;
@@ -166,26 +183,6 @@
 
 .action-btn:hover {
   background-color: #218838;
-}
-
-/* Barra de progreso */
-.progress-container {
-  margin: 1rem 0;
-  background: #eee;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-.progress-bar {
-  height: 10px;
-  background: #28a745;
-  transition: width 0.3s ease;
-}
-.progress-container p {
-  margin-top: 0.5rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #333;
 }
 
 /* Responsividad */
@@ -209,12 +206,12 @@
 @media (max-width: 768px) {
   .match-card {
     display: flex;
-    flex-direction: column;   /* dos filas */
+    flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
   }
 
-    .buttons-row {
+  .buttons-row {
     flex-direction: column;
     align-items: center;
   }
@@ -224,14 +221,12 @@
     max-width: 300px;
   }
 
-
   .local-block,
   .visitor-block {
-    justify-content: space-between; /* bandera/nombre a la izq, input a la derecha */
+    justify-content: space-between;
     width: 100%;
   }
 
-  /* Orden correcto: bandera -> nombre -> input */
   .local-block img,
   .visitor-block img { order: 1; }
   .local-block span,
@@ -240,7 +235,7 @@
   .visitor-block input.score { order: 3; }
 
   .vs {
-    display: none;            /* ocultamos el VS en móviles */
+    display: none;
   }
 }
 
