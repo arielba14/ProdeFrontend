@@ -17,7 +17,13 @@ function AdminResults({ token }) {
 
   const saveResult = (id, goles_local, goles_visita) => {
     apiPut(`/results/matches/${id}`, token, { goles_local, goles_visita })
-      .then((data) => alert(data.success ? "Resultado actualizado" : data.error))
+      .then((data) => {
+        if (data.success) {
+          showAlert("✅ Resultado actualizado", "success");
+        } else {
+          showAlert(data.error || "❌ Ocurrió un error", "error");
+        }
+      })
       .catch((err) => setError(err.message));
   };
 

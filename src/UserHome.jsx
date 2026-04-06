@@ -26,9 +26,9 @@ function UserHome({ token, onLogout }) {
       setView("userPredictions");
     } catch (err) {
       if (err.message.includes("403")) {
-        alert("⚠️ Debes confirmar tus pronósticos antes de ver los de otros usuarios.");
+        showAlert("⚠️ Debes confirmar tus pronósticos antes de ver los de otros usuarios.");
       } else {
-        alert(`❌ Error al cargar predicciones del usuario: ${err.message}`);
+        showAlert(`❌ Error al cargar predicciones del usuario: ${err.message}`, "error");
       }
     }
   };

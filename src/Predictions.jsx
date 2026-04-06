@@ -15,7 +15,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         const data = await apiGet("/matches", token);
         setMatches(data);
       } catch (err) {
-        alert(`❌ Error al cargar partidos: ${err.message}`);
+        showAlert(`❌ Error al cargar partidos: ${err.message}`, "error");
       }
     };
 
@@ -33,7 +33,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         });
         setPredictions(predObj);
       } catch (err) {
-        alert(`❌ Error al cargar predicciones: ${err.message}`);
+        showAlert(`❌ Error al cargar predicciones: ${err.message}`, "error");
       }
     };
 
@@ -60,9 +60,9 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         team2: result.team2
       }));
       await apiPost("/predictions", token, { predictions: payload, confirm: false });
-      alert("✅ Predicciones guardadas");
+      showAlert("✅ Predicciones guardadas", "success");
     } catch (err) {
-      alert(`❌ Error al guardar: ${err.message}`);
+      showAlert(`❌ Error al guardar: ${err.message}`, "error");
     }
   };
 
@@ -74,7 +74,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     );
 
     if (incompletos) {
-      alert("⚠️ Debes completar todos los partidos antes de confirmar.");
+      showAlert("⚠️ Debes completar todos los partidos antes de confirmar.");
       return;
     }
 
@@ -88,9 +88,9 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
       setConfirmed(true);
       localStorage.setItem("predictionsConfirmed", 1);
       if (onConfirmPredictions) onConfirmPredictions();
-      alert("✅ Predicciones confirmadas, ya no se pueden modificar");
+      showAlert("✅ Predicciones confirmadas, ya no se pueden modificar", "success");
     } catch (err) {
-      alert(`❌ Error al confirmar: ${err.message}`);
+      showAlert(`❌ Error al confirmar: ${err.message}`, "error");
     }
   };
 

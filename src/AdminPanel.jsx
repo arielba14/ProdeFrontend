@@ -4,6 +4,8 @@ import "./AdminPanel.css";
 import "./AppHeader.css";
 import AdminSettings from "./AdminSettings";
 import { apiGet, apiPut, apiDelete } from "./api"; 
+import { showAlert } from "./alertService";
+
 
 function AdminPanel({ onLogout }) {
   const [view, setView] = useState("pending"); // "pending", "all", "unconfirmed", "settings", "results"
@@ -47,13 +49,13 @@ function AdminPanel({ onLogout }) {
               .then(() => {
                 setPendingUsers(pendingUsers.filter((u) => u.id !== id));
                 setAllUsers(allUsers.filter((u) => u.id !== id));
-                alert("Usuario y sus predicciones eliminados correctamente");
+                showAlert("Usuario y sus predicciones eliminados correctamente");
               });
           }
         } else if (data.success) {
           setPendingUsers(pendingUsers.filter((u) => u.id !== id));
           setAllUsers(allUsers.filter((u) => u.id !== id));
-          alert("Usuario eliminado correctamente");
+          showAlert("Usuario eliminado correctamente");
         }
       })
       .catch((err) => console.error("Error al eliminar usuario:", err));
@@ -61,9 +63,9 @@ function AdminPanel({ onLogout }) {
 
   // Cambiar contraseña de usuario activo
   const changePassword = (id, newPassword) => {
-    if (!newPassword) return alert("Ingrese una nueva contraseña");
+    if (!newPassword) return showAlert("Ingrese una nueva contraseña");
     apiPut(`/change-password/${id}`, token, { newPassword })
-      .then(() => alert("Contraseña cambiada correctamente"))
+      .then(() => showAlert("Contraseña cambiada correctamente"))
       .catch((err) => console.error("Error al cambiar contraseña:", err));
   };
 
