@@ -118,12 +118,18 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     return name;
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+
   return (
     <div className="predictions-container">
       <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
         <h1>Prode Mundial Molinos Florencia</h1>
-        <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>
+        <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
       </header>
 
       {/* Barra de progreso fija */}

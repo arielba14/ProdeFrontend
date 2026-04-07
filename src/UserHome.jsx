@@ -68,12 +68,18 @@ function UserHome({ token, onLogout }) {
   const groupedMatches = useMemo(() =>
     groupBy(matches, m => m.grupo), [matches]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+
   return (
     <div className="userhome-container">
       <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
         <h1>Panel de Control Admin</h1>
-        <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>
+        <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
       </header>
 
       <div className="view-buttons">

@@ -69,13 +69,18 @@ function AdminPanel({ onLogout }) {
       .catch((err) => console.error("Error al cambiar contraseña:", err));
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="admin-panel">
       {/* Header fijo con logo y logout */}
       <header className="app-header">
         <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
         <h1>Panel de Control Admin</h1>
-        <button className="logout-btn" onClick={onLogout}>Cerrar Sesión</button>
+        <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
       </header>
 
       {/* Contenido debajo del header */}

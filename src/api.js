@@ -2,13 +2,21 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 // 👉 Helper para manejar respuestas y errores
+// api.js
 const handleResponse = async (response) => {
   const contentType = response.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
-    return { error: "Respuesta inesperada del servidor" };
+  const json = contentType && contentType.includes("application/json")
+    ? await response.json()
+    : { error: "Respuesta inesperada del servidor" };
+
+  // Si el token está vencido o no autorizado
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    // Podés redirigir directamente al login
+    window.location.href = "/login";
+    throw new Error("Sesión expirada, vuelve a iniciar sesión");
   }
 
-  const json = await response.json();
   if (!response.ok) {
     return { error: json.error || "Error en la petición" };
   }
