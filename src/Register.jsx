@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { register } from "./api";
 
+// 👉 Helper para normalizar nombres propios
+const normalizeName = (name) => {
+  return name
+    .trim()
+    .toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
 function Register({ onRegister }) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -19,7 +29,12 @@ function Register({ onRegister }) {
     }
 
     try {
-      const data = await register({ nombre, apellido, email, password });
+      const data = await register({
+        nombre: normalizeName(nombre),
+        apellido: normalizeName(apellido),
+        email,
+        password,
+      });
 
       if (data.error) {
         setMessage({ type: "error", text: data.error || "Error en registro" });
@@ -35,6 +50,7 @@ function Register({ onRegister }) {
       setMessage({ type: "error", text: "Registro fallido: " + err.message });
     }
   };
+  
 
   return (
     <div className="login-form">
