@@ -68,9 +68,9 @@ function UserHome({ token, onLogout }) {
   const groupedMatches = useMemo(() =>
     groupBy(matches, m => m.grupo), [matches]);
 
-  const handleLogout = () => {
+   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.reload();
   };
 
 

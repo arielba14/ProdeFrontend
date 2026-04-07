@@ -13,7 +13,7 @@ const handleResponse = async (response) => {
   if (response.status === 401) {
     localStorage.removeItem("token");
     // Podés redirigir directamente al login
-    window.location.href = "/login";
+    window.location.reload();
     throw new Error("Sesión expirada, vuelve a iniciar sesión");
   }
 

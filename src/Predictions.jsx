@@ -118,9 +118,9 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     return name;
   };
 
-  const handleLogout = () => {
+   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.reload();
   };
 
 

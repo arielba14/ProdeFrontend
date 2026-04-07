@@ -71,7 +71,7 @@ function AdminPanel({ onLogout }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.reload();
   };
 
   return (
