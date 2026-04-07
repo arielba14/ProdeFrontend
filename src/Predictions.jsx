@@ -5,12 +5,38 @@ import { getFlag } from "./flags";
 import { showAlert } from "./alertService";
 import AppHeader from './AppHeader';
 
-
 function Predictions({ token, onLogout, onConfirmPredictions }) {
   const [matches, setMatches] = useState([]);
   const [predictions, setPredictions] = useState({});
   const [confirmed, setConfirmed] = useState(false);
 
+  // Verificar fecha límite apenas carga el componente
+  useEffect(() => {
+    const checkDeadline = async () => {
+      try {
+        const data = await apiGet("/settings/deadline-public", token);
+        if (data.fecha_limite) {
+          const deadline = new Date(data.fecha_limite);
+          const now = new Date();
+
+          if (now > deadline) {
+            showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
+            // Desloguear al usuario aunque ya estuviera logueado
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+            localStorage.removeItem("predictionsConfirmed");
+            window.location.reload();
+          }
+        }
+      } catch (err) {
+        console.error("Error al verificar fecha límite:", err);
+      }
+    };
+
+    checkDeadline();
+  }, [token]);
+
+  // Cargar partidos y predicciones
   useEffect(() => {
     const fetchMatches = async () => {
       try {
@@ -68,30 +94,6 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     }
   };
 
-    const checkDeadline = async () => {
-    try {
-      const data = await apiGet("/settings/deadline-public", token);
-      if (data.fecha_limite) {
-        const deadline = new Date(data.fecha_limite);
-        const now = new Date();
-
-        if (now > deadline) {
-          showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
-          // Desloguear al usuario aunque ya estuviera logueado
-          localStorage.removeItem("token");
-          localStorage.removeItem("role");
-          localStorage.removeItem("predictionsConfirmed");
-          window.location.reload();
-        }
-      }
-    } catch (err) {
-      console.error("Error al verificar fecha límite:", err);
-    }
-  };
-
-  checkDeadline();
-
-
   const confirmPredictions = async () => {
     const incompletos = matches.some(
       (m) =>
@@ -143,11 +145,10 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     return name;
   };
 
-   const handleLogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.reload();
   };
-
 
   return (
     <div className="predictions-container">
