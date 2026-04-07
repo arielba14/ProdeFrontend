@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import "./Predictions.css";
-import "./AppHeader.css";
 import { apiGet, apiPost } from "./api";
 import { getFlag } from "./flags";
 import { showAlert } from "./alertService";
+import AppHeader from './AppHeader';
+
 
 function Predictions({ token, onLogout, onConfirmPredictions }) {
   const [matches, setMatches] = useState([]);
@@ -67,6 +68,30 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     }
   };
 
+    const checkDeadline = async () => {
+    try {
+      const data = await apiGet("/settings/deadline-public", token);
+      if (data.fecha_limite) {
+        const deadline = new Date(data.fecha_limite);
+        const now = new Date();
+
+        if (now > deadline) {
+          showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
+          // Desloguear al usuario aunque ya estuviera logueado
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          localStorage.removeItem("predictionsConfirmed");
+          window.location.reload();
+        }
+      }
+    } catch (err) {
+      console.error("Error al verificar fecha límite:", err);
+    }
+  };
+
+  checkDeadline();
+
+
   const confirmPredictions = async () => {
     const incompletos = matches.some(
       (m) =>
@@ -126,11 +151,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
 
   return (
     <div className="predictions-container">
-      <header className="app-header">
-        <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
-        <h1>Prode Mundial Molinos Florencia</h1>
-        <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
-      </header>
+      <AppHeader handleLogout={handleLogout} />
 
       {/* Barra de progreso fija */}
       {!confirmed && (

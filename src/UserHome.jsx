@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import "./UserHome.css";
-import "./AppHeader.css";
 import { apiGet } from "./api";
 import { getFlag } from "./flags";
 import { showAlert } from "./alertService";
+import AppHeader from './AppHeader';
+
 
 function UserHome({ token, onLogout }) {
   const [view, setView] = useState("predictions"); 
@@ -76,11 +77,8 @@ function UserHome({ token, onLogout }) {
 
   return (
     <div className="userhome-container">
-      <header className="app-header">
-        <img src="/Logo Molino 4.jpg" alt="Logo Molinos Florencia" className="logo" />
-        <h1>Panel de Control Admin</h1>
-        <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
-      </header>
+      <AppHeader handleLogout={handleLogout} />
+
 
       <div className="view-buttons">
         <button className={view === "predictions" ? "active" : ""} onClick={() => setView("predictions")}>Mis Pronósticos</button>

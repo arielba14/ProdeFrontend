@@ -31,7 +31,7 @@ function AdminSettings({ token }) {
     try {
       if (!token) throw new Error("No hay token válido disponible");
       const data = await apiPut("/settings/deadline", token, { fecha_limite: deadline });
-      showAlert(data.success ? "Fecha límite actualizada" : data.error, "error");
+      showAlert(data.success ? "Fecha límite actualizada" : data.error, "success");
     } catch (err) {
       console.error("Error al guardar fecha límite:", err);
       setError(err.message);
