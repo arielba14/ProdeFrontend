@@ -1,8 +1,6 @@
 .app-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   background: #fff;
   display: flex;
   align-items: center;
@@ -25,56 +23,73 @@
   margin: 0;
 }
 
-.app-header .logout-btn {
+.header-actions {
+  display: flex;
+  gap: 10px; /* espacio entre botones */
+  align-items: center;
+}
+
+.header-actions .reglamento-link,
+.header-actions .logout-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/* Estilo específico de cada botón */
+.header-actions .reglamento-link {
+  color: #007bff;
+  border: 1px solid #007bff;
+  background: #f1f9ff;
+}
+.header-actions .reglamento-link:hover {
+  background: #e0f0ff;
+}
+
+.header-actions .logout-btn {
   background: #6812f3;
   color: #fff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
   transition: background 0.3s;
 }
-.app-header .logout-btn:hover {
+.header-actions .logout-btn:hover {
   background: #30116b;
 }
 
-.nav-links {
-  margin-left: 20px;
-}
-
-.nav-links .reglamento-link {
-  color: #007bff;
-  font-weight: bold;
-  text-decoration: none;
-  margin-right: 20px;
-}
-
-.nav-links .reglamento-link:hover {
-  text-decoration: underline;
-}
-
-/* Ajustes para móvil */
+/* Móvil */
 @media (max-width: 768px) {
   .app-header {
-    flex-direction: row;       /* 🔑 mantiene todo en una sola línea */
-    justify-content: space-between;
+    flex-direction: column;   /* logo y título apilados */
     align-items: center;
-    padding: 4px 8px;          /* menos padding */
-    height: 50px;              /* más bajo en móvil */
+    padding: 6px 10px;
+    height: auto;
   }
 
   .app-header .logo {
-    height: 28px;              /* logo más chico */
+    height: 32px;
+    margin-bottom: 4px;
   }
 
   .app-header h1 {
-    font-size: 1rem;           /* título más compacto */
-    margin: 0;
+    font-size: 1rem;
+    margin: 4px 0;
+    text-align: center;
   }
 
-  .app-header .logout-btn {
-    padding: 5px 10px;
+  /* 🔑 en móvil, los dos botones juntos en fila */
+  .header-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .header-actions .logout-btn,
+  .header-actions .reglamento-link {
     font-size: 0.85rem;
+    padding: 5px 10px;
   }
 }

@@ -14,17 +14,14 @@ function AppHeader({ handleLogout }) {
           className="logo" 
         />
         <h1>Prode Mundial Molinos Florencia</h1>
-        <nav className="nav-links">
-          <button 
-            className="reglamento-link" 
-            onClick={() => setShowReglamento(true)}
-          >
+        <div className="header-actions">
+          <button className="reglamento-link" onClick={() => setShowReglamento(true)}>
             Reglamento
           </button>
-        </nav>
-        <button className="logout-btn" onClick={handleLogout}>
-          Cerrar Sesión
-        </button>
+          <button className="logout-btn" onClick={handleLogout}>
+            Cerrar Sesión
+          </button>
+        </div>
       </header>
 
       {showReglamento && (

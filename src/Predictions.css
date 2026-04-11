@@ -48,11 +48,11 @@
 /* En móvil: header más bajo, ajustamos top y padding */
 @media (max-width: 768px) {
   .progress-fixed {
-    top: 50px;   /* justo debajo del header móvil */
+    top: 100px;   /* justo debajo del header móvil */
   }
 
   .matches-scroll {
-    padding-top: 120px; /* más espacio para que no tape Grupo A */
+    padding-top: 140px; /* más espacio para que no tape Grupo A */
   }
 }
 

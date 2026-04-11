@@ -14,6 +14,7 @@ function ReglamentoModal({ onClose }) {
               prodemolinosflorencia.netlify.app
             </a>, registrarse y ser autorizado por el administrador.
           </li>
+          <li> El juego consiste en predecir los resultados de cada partido, que luego se puntuará de acuerdo al resultado oficial.</li> 
           <li><strong>Sistema de puntuación:</strong>
             <ul>
               <li>Acierto exacto: <strong>3 pts</strong></li>
@@ -21,10 +22,17 @@ function ReglamentoModal({ onClose }) {
               <li>Sin acierto: <strong>0 pts</strong></li>
             </ul>
           </li>
-          <li>Ganadores: mayor cantidad de puntos; en caso de empate, más aciertos exactos; si persiste, sorteo. En caso de terminar 2 ó más participantes con la misma cantidad de puntos y de aciertos exactos en el primer puesto el orden de cada participante se definirá por sorteo.</li>
+          <li>Ganadores: 
+            <ul>
+              <li>Mayor cantidad de puntos.</li>
+              <li>En caso de empate, más aciertos exactos.</li>
+              <li>Si persiste, sorteo.</li> 
+              <li>En caso de terminar 2 ó más participantes con la misma cantidad de puntos y de aciertos exactos en el primer puesto el orden de cada participante se definirá por sorteo.</li>
+            </ul>
+          </li>
           <li>Una vez confirmados los pronósticos no se pueden modificar.</li>
           <li>Límite para confirmar: <strong>10/06/26 a las 12:00 hs</strong>. El usuario que haya guardado los pronósticos y no los haya confirmado no será tenido en cuenta.</li>
-          <li>8)	Una vez confirmado los pronósticos cada participante puede acceder a ver sus pronósticos, los resultados oficiales y el ranking de participantes.</li>
+          <li>Una vez confirmado los pronósticos cada participante puede acceder a ver sus pronósticos, los resultados oficiales y el ranking de participantes.</li>
           <li>El juego no tiene costo.</li>
           <li><strong>Premios:</strong>
             <ul>
