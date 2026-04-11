@@ -45,7 +45,7 @@
   color: #333;
 }
 
-/* En móvil: header más bajo, ajustamos top y padding */
+/* En móvil: header más alto, ajustamos top y padding */
 @media (max-width: 768px) {
   .progress-fixed {
     top: 100px;   /* justo debajo del header móvil */
@@ -90,38 +90,25 @@
   margin-bottom: 1rem;
 }
 
-.local-block {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-.local-block img {
-  width: 36px;
-  height: 24px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  object-fit: contain;
-}
-
-.local-block span {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.local-block input.score {
-  width: 60px;
-  text-align: center;
-}
-
+/* Bloques de equipo en escritorio: grid fijo */
+.local-block,
 .visitor-block {
-  display: flex;
+  display: grid;
+  grid-template-columns: 36px auto 60px; /* bandera | nombre | input */
   align-items: center;
-  justify-content: flex-start;
   gap: 0.5rem;
 }
 
+/* 🔑 Ajuste solo para visitante */
+.visitor-block {
+  display: grid;
+  grid-template-columns: min-content auto 60px; /* bandera | nombre | input */
+  align-items: center;
+  column-gap: 0.5rem; /* 🔑 bandera y nombre más juntos */
+}
+
+
+.local-block img,
 .visitor-block img {
   width: 36px;
   height: 24px;
@@ -130,14 +117,20 @@
   object-fit: contain;
 }
 
+.local-block span,
 .visitor-block span {
   font-size: 0.95rem;
   font-weight: 600;
 }
 
+.local-block input.score,
 .visitor-block input.score {
   width: 60px;
+  min-width: 60px;
+  max-width: 60px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
 }
 
 .vs {
@@ -221,8 +214,10 @@
     max-width: 300px;
   }
 
+  /* 🔑 en móvil, vuelven a flex */
   .local-block,
   .visitor-block {
+    display: flex;
     justify-content: space-between;
     width: 100%;
   }
