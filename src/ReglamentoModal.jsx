@@ -18,7 +18,7 @@ function ReglamentoModal({ onClose }) {
           <li><strong>Sistema de puntuación:</strong>
             <ul>
               <li>Acierto exacto: <strong>3 pts</strong></li>
-              <li>Acierto parcial: <strong>1 pt</strong></li>
+              <li>Acierto parcial: <strong>1 pt</strong> (Acierto ganador/empate pero no con goles exactos)</li>
               <li>Sin acierto: <strong>0 pts</strong></li>
             </ul>
           </li>
