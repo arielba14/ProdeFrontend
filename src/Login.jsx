@@ -22,6 +22,27 @@ function Login({ onLogin, onSwitchRegister }) {
         return;
       }
 
+      // 👇 chequeo de fecha límite ANTES de guardar nada
+      try {
+        const deadlineResp = await fetch(`${import.meta.env.VITE_API_URL}/settings/deadline-public`, {
+          headers: { Authorization: `Bearer ${data.token}` }
+        });
+        const deadlineData = await deadlineResp.json();
+
+        if (deadlineData.fecha_limite) {
+          const deadline = new Date(deadlineData.fecha_limite);
+          const now = new Date();
+
+          if (now > deadline && Number(data.predictionsConfirmed) === 0) {
+            setMessage({ type: "error", text: "⏰ El tiempo para participar ya terminó. No puedes ingresar." });
+            return; // 👈 no guardar token ni llamar a onLogin
+          }
+        }
+      } catch (err) {
+        console.error("Error al verificar fecha límite en login:", err);
+      }
+
+      // Si pasó el chequeo, recién acá guardás datos
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("predictionsConfirmed", Number(data.predictionsConfirmed));

@@ -15,26 +15,28 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
     const checkDeadline = async () => {
       try {
         const data = await apiGet("/settings/deadline-public", token);
+        console.log(data.fecha_limite)
         if (data.fecha_limite) {
           const deadline = new Date(data.fecha_limite);
           const now = new Date();
 
           if (now > deadline) {
-            showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
-            // Desloguear al usuario aunque ya estuviera logueado
-            localStorage.removeItem("token");
-            localStorage.removeItem("role");
-            localStorage.removeItem("predictionsConfirmed");
-            window.location.reload();
+            // Si ya pasó la fecha y NO están confirmadas
+            if (!confirmed) {
+              showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
+              localStorage.removeItem("token");
+              localStorage.removeItem("role");
+              localStorage.removeItem("predictionsConfirmed");
+              window.location.reload();
+            }
           }
         }
       } catch (err) {
         console.error("Error al verificar fecha límite:", err);
       }
     };
-
     checkDeadline();
-  }, [token]);
+  }, [token, confirmed]);
 
   // Cargar partidos y predicciones
   useEffect(() => {
@@ -112,7 +114,13 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         team1: result.team1,
         team2: result.team2
       }));
-      await apiPost("/predictions", token, { predictions: payload, confirm: true });
+      const response = await apiPost("/predictions", token, { predictions: payload, confirm: true });
+
+      if (response.error) {
+        showAlert(`❌ Error al confirmar: ${response.error}`, "error");
+        return; // 👈 no seguir si hubo error
+      }
+
       setConfirmed(true);
       localStorage.setItem("predictionsConfirmed", 1);
       if (onConfirmPredictions) onConfirmPredictions();
