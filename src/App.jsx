@@ -7,48 +7,28 @@ import UserHome from "./UserHome";
 import Predictions from "./Predictions";
 
 function App() {
-  const initialToken = localStorage.getItem("token");
-  const [token, setToken] = useState(
-    initialToken && initialToken !== "undefined" ? initialToken : null
-  );
-
-  const initialRole = localStorage.getItem("role");
-  const [role, setRole] = useState(
-    initialRole && initialRole !== "undefined" ? initialRole : null
-  );
-
-  const initialPredictions = localStorage.getItem("predictionsConfirmed");
-  const [predictionsConfirmed, setPredictionsConfirmed] = useState(
-    initialPredictions && initialPredictions !== "undefined"
-      ? parseInt(initialPredictions, 10)
-      : 0
-  );
+  const [token, setToken] = useState(null);
+  const [role, setRole] = useState(null);
+  const [predictionsConfirmed, setPredictionsConfirmed] = useState(0);
 
   const [showRegister, setShowRegister] = useState(false);
 
   const handleLogin = (data) => {
     if (data.token) {
-      localStorage.setItem("token", data.token);
       setToken(data.token);
     }
-    if (data.role) {
-      localStorage.setItem("role", data.role);
+    if (data.role) {      
       setRole(data.role);
     }
     if (data.predictionsConfirmed !== undefined) {
-      const confirmedValue = Number(data.predictionsConfirmed);
-      localStorage.setItem("predictionsConfirmed", confirmedValue);
+      const confirmedValue = Number(data.predictionsConfirmed);      
       setPredictionsConfirmed(confirmedValue);
-    } else {
-      localStorage.setItem("predictionsConfirmed", 0);
+    } else {     
       setPredictionsConfirmed(0);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("predictionsConfirmed");
     setToken(null);
     setRole(null);
     setPredictionsConfirmed(0);
