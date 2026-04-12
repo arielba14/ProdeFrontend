@@ -14,7 +14,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
   useEffect(() => {
     const checkDeadline = async () => {
       try {
-        const data = await apiGet("/settings/deadline-public", token);
+        const data = await apiGet("/settings/obtenerFecha", token);
         console.log(data.fecha_limite)
         if (data.fecha_limite) {
           const deadline = new Date(data.fecha_limite);
