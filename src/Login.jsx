@@ -18,7 +18,6 @@ function Login({ onLogin, onSwitchRegister }) {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log("Login rechazado, data:", data);
         setMessage({ type: "error", text: data.error || "Error en login" });
         return;
       }
@@ -34,11 +33,6 @@ function Login({ onLogin, onSwitchRegister }) {
             const deadlineStr = deadlineData.fecha_limite;
             const deadline = new Date(deadlineStr);
             const now = new Date();   
-            
-            console.log("now:", now.toString());
-            console.log("fecha_limite cruda:", deadlineData.fecha_limite);
-            console.log("deadline:", deadline.toString());
-            console.log("diff minutos:", Math.round((deadline - now) / 60000));
 
             if (now > deadline && Number(data.predictionsConfirmed) === 0) {
               setMessage({ type: "error", text: "⏰ El tiempo para participar ya terminó. No puedes ingresar." });
