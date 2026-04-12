@@ -18,7 +18,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         console.log(data.fecha_limite)
         if (data.fecha_limite) {
           // Forzar interpretación en hora Argentina (GMT-3)
-          const deadlineStr = data.fecha_limite + "-03:00";
+          const deadlineStr = data.fecha_limite;
           const deadline = new Date(deadlineStr);
           const now = new Date();
 
