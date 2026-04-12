@@ -24,7 +24,7 @@ function Login({ onLogin, onSwitchRegister }) {
 
       // 👇 chequeo de fecha límite ANTES de guardar nada
       try {
-        const deadlineResp = await fetch(`${import.meta.env.VITE_API_URL}/settings/deadline-public`, {
+        const deadlineResp = await fetch(`${import.meta.env.VITE_API_URL}/settings/obtenerFecha`, {
           headers: { Authorization: `Bearer ${data.token}` }
         });
         const deadlineData = await deadlineResp.json();
