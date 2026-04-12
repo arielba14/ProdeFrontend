@@ -17,11 +17,12 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
         const data = await apiGet("/settings/obtenerFecha", token);
         console.log(data.fecha_limite)
         if (data.fecha_limite) {
-          const deadline = new Date(data.fecha_limite);
+          // Forzar interpretación en hora Argentina (GMT-3)
+          const deadlineStr = data.fecha_limite + "-03:00";
+          const deadline = new Date(deadlineStr);
           const now = new Date();
 
           if (now > deadline) {
-            // Si ya pasó la fecha y NO están confirmadas
             if (!confirmed) {
               showAlert("⏰ El tiempo para cargar pronósticos ya terminó. No puedes participar.", "error");
               localStorage.removeItem("token");
@@ -31,6 +32,7 @@ function Predictions({ token, onLogout, onConfirmPredictions }) {
             }
           }
         }
+
       } catch (err) {
         console.error("Error al verificar fecha límite:", err);
       }
